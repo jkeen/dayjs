@@ -11,7 +11,15 @@ export const englishFormats = {
   LLLL: 'dddd, MMMM D, YYYY h:mm A'
 }
 
-export const u = (formatStr, formats) => formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
-  const B = b && b.toUpperCase()
-  return a || formats[b] || englishFormats[b] || t(formats[B])
+export const u = (formatStr, formats, date) => formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (match, ignored, formatKey) => {
+  const capsFormatKey = formatKey && formatKey.toUpperCase()
+  if (ignored) {
+    return ignored
+  } else if (formats[formatKey] && typeof formats[formatKey] === 'function') {
+    return `[${formats[formatKey](date)}]` // interpolate the string and make sure it's ignored in the next phase
+  } else if (formats[capsFormatKey] && typeof formats[capsFormatKey] === 'function') {
+    return `[${formats[capsFormatKey](date)}]` // interpolate the string and make sure it's ignored in the next phase
+  }
+
+  return (formats[formatKey] || t(formats[capsFormatKey]))
 })
