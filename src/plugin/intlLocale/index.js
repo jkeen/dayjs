@@ -15,7 +15,11 @@ export default (option, ins, klass) => {
 
   const klassOldLocale = klass.locale
   klass.locale = function (preset, object = {}) {
-    return klassOldLocale.call(this, preset, intlLocaleData(preset, object).locale)
+    if (!klass.Ls[preset]) {
+      return klassOldLocale.call(this, preset, intlLocaleData(preset, object).locale)
+    }
+
+    return klassOldLocale.call(this, preset, null)
   }
 
   klass.localeData = (localeName = klass.locale()) => {
@@ -23,11 +27,11 @@ export default (option, ins, klass) => {
     return {
       formats: () => intlLocale.formats(),
       firstDayOfWeek: () => 0,
-      weekdays: localeSort => intlLocale.weekdays(localeSort),
-      weekdaysShort: localeSort => intlLocale.weekdaysShort(localeSort),
-      weekdaysMin: localeSort => intlLocale.weekdaysMin(localeSort),
-      months: localeSort => intlLocale.months(localeSort),
-      monthsShort: localeSort => intlLocale.monthsShort(localeSort)
+      weekdays: intlLocale.weekdays,
+      weekdaysShort: intlLocale.weekdaysShort,
+      weekdaysMin: intlLocale.weekdaysMin,
+      months: localeSort => intlLocale.months,
+      monthsShort: localeSort => intlLocale.monthsShort,
     }
   }
 

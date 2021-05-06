@@ -1,5 +1,7 @@
 const intlLocaleData = (localeName, extrasAndOverrides = {}) => {
-  const intlFormat = (dateOrDates, formatting) => {
+  const intlFormat = (dateOrDates, formatting, localeSort = false) => {
+    // TODO:: if locale sort sort by locale week order, sort by that order
+
     const results = [].concat(dateOrDates).map(d => new Intl.DateTimeFormat(localeName, formatting).format(d))
     if (results.length > 1) {
       return results
@@ -15,9 +17,9 @@ const intlLocaleData = (localeName, extrasAndOverrides = {}) => {
   const interpreters = {
     months: (d = MONTHS) => intlFormat(d, { month: 'long' }),
     monthsShort: (d = MONTHS) => intlFormat(d, { month: 'short' }),
-    weekdays: (d = WEEKDAYS) => intlFormat(d, { weekday: 'long' }),
-    weekdaysShort: (d = WEEKDAYS) => intlFormat(d, { weekday: 'short' }),
-    weekdaysMin: (d = WEEKDAYS) => intlFormat(d, { weekday: 'narrow' })
+    weekdays: (d = WEEKDAYS, localeSort) => intlFormat(d, { weekday: 'long' }, localeSort),
+    weekdaysShort: (d = WEEKDAYS, localeSort) => intlFormat(d, { weekday: 'short' }, localeSort),
+    weekdaysMin: (d = WEEKDAYS, localeSort) => intlFormat(d, { weekday: 'narrow' }, localeSort)
   }
 
   // const relativeTime = {
@@ -76,9 +78,9 @@ const intlLocaleData = (localeName, extrasAndOverrides = {}) => {
     name: localeName,
     months: (d = MONTHS) => interpreters.months(d),
     monthsShort: (d = MONTHS) => interpreters.monthsShort(d),
-    weekdays: (d = WEEKDAYS) => interpreters.weekdays(d),
-    weekdaysShort: (d = WEEKDAYS) => interpreters.weekdaysShort(d),
-    weekdaysMin: (d = WEEKDAYS) => interpreters.weekdaysMin(d),
+    weekdays: (d = WEEKDAYS, localeSort) => interpreters.weekdays(d, localeSort),
+    weekdaysShort: (d = WEEKDAYS, localeSort) => interpreters.weekdaysShort(d, localeSort),
+    weekdaysMin: (d = WEEKDAYS, localeSort) => interpreters.weekdaysMin(d, localeSort),
     formats,
     ...extrasAndOverrides
   }
