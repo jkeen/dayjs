@@ -6,6 +6,7 @@ import uk from '../../src/locale/uk'
 import '../../src/locale/zh-cn'
 import customParseFormat from '../../src/plugin/customParseFormat'
 import localizedFormats from '../../src/plugin/localizedFormat'
+import intlLocale from '../../src/plugin/intlLocale'
 
 dayjs.extend(customParseFormat)
 dayjs.extend(localizedFormats)

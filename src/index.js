@@ -8,23 +8,33 @@ Ls[L] = en
 
 const isDayjs = d => d instanceof Dayjs // eslint-disable-line no-use-before-define
 
+const isLocaleDataAvailable = (localeString) => Ls[preset]
+const loadLocaleData = (preset, data) => {
+  Ls[preset] = data
+  return preset
+}
+const currentGlobalLocale = () => L
+
 const parseLocale = (preset, object, isLocal) => {
   let l
-  if (!preset) return L
+  if (!preset) return L // return the global locale
+
   if (typeof preset === 'string') {
-    if (Ls[preset]) {
-      l = preset
+    if (Ls[preset]) { // has this locale string been loaded?
+      l = preset // set the locale appropriately
     }
     if (object) {
-      Ls[preset] = object
-      l = preset
+      Ls[preset] = object // load the locale with this data
+      l = preset // set the locale appropriately
     }
-  } else {
-    const { name } = preset
-    Ls[name] = preset
-    l = name
+  } else { // an object full of locale data is being passed in
+    const { name } = preset // pull out the name from the locale object
+    Ls[name] = preset // set the locale hash
+    l = name // set the current locale
   }
-  if (!isLocal && l) L = l
+
+  if (!isLocal && l) L = l // set the global locale
+
   return l || (!isLocal && L)
 }
 
